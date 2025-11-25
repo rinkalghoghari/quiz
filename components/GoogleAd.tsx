@@ -59,24 +59,42 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
     const isAdEnabled = gdprConsent === 'true' && getRemoteConfigValue('google_ad_enabled') !== 'false';
     setAdEnabled(isAdEnabled);
   }, [propAdSlot]);
-  useEffect(() => {
-    if (!adEnabled || !adSlot || adPushed.current) return;
+
+
+ useEffect(() => {
+  if (!adEnabled || !adSlot || adPushed.current) return;
+
+  let tries = 0;
+
+  const loadAd = () => {
+    if (!adRef.current) return;
+
+    const width = adRef.current.offsetWidth;
+
+    // Wait until width > 0
+    if (width === 0) {
+      if (tries < 50) {
+        tries++;
+        setTimeout(loadAd, 100);
+      } else {
+        console.warn("Ad failed because width never became > 0");
+      }
+      return;
+    }
 
     try {
-      // Small delay to ensure DOM is ready
-      const timer = setTimeout(() => {
-        if (window.adsbygoogle && adRef.current) {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-          adPushed.current = true;
-          console.log('Ad initialized for slot:', adSlot);
-        }
-      }, 100);
-
-      return () => clearTimeout(timer);
-    } catch (error) {
-      console.error('AdSense initialization error:', error);
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      adPushed.current = true;
+      console.log("Ad Loaded after width check:", width);
+    } catch (err) {
+      console.error("AdSense push error:", err);
     }
-  }, [adEnabled, adSlot]);
+  };
+
+  loadAd();
+}, [adEnabled, adSlot]);
+
+
 
   // Loading state
   if (adEnabled === null) {
