@@ -94,7 +94,8 @@ const Page = () => {
         >
           <div className="flex justify-center w-full">
             <GoogleAd 
-              adSlot="YOUR_QUIZ_TOP_AD_SLOT"
+              // adSlot="YOUR_QUIZ_TOP_AD_SLOT"
+              adSlot="1279565299"
               className="w-full"
               style={{ minHeight: '90px' }}
             />
@@ -223,7 +224,8 @@ const Page = () => {
         >
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
             <GoogleAd 
-              adSlot="YOUR_MAIN_QUIZ_AD_SLOT"
+              // adSlot="YOUR_MAIN_QUIZ_AD_SLOT"
+              adSlot="1279565299"
               className="w-full"
               style={{ minHeight: '250px' }}
             />
