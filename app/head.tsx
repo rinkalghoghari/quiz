@@ -8,7 +8,7 @@ export default function Head() {
       <Script
         id="adsense-init"
         async
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5504771682915102"
         crossOrigin="anonymous"
       />
