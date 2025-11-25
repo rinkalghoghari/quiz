@@ -59,24 +59,34 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
     const isAdEnabled = gdprConsent === 'true' && getRemoteConfigValue('google_ad_enabled') !== 'false';
     setAdEnabled(isAdEnabled);
   }, [propAdSlot]);
+  
   useEffect(() => {
-    if (!adEnabled || !adSlot || adPushed.current) return;
+  if (!adEnabled || !adSlot || adPushed.current) return;
+
+  let attempts = 0;
+
+  const startAd = () => {
+    if (!adRef.current) return;
+
+    const width = adRef.current.offsetWidth;
+
+    // Wait for width to become > 0
+    if (width === 0 && attempts < 50) {
+      attempts++;
+      return setTimeout(startAd, 100);
+    }
 
     try {
-      // Small delay to ensure DOM is ready
-      const timer = setTimeout(() => {
-        if (window.adsbygoogle && adRef.current) {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-          adPushed.current = true;
-          console.log('Ad initialized for slot:', adSlot);
-        }
-      }, 100);
-
-      return () => clearTimeout(timer);
-    } catch (error) {
-      console.error('AdSense initialization error:', error);
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      adPushed.current = true;
+      console.log("Ad initialized after width check:", width);
+    } catch (e) {
+      console.error("AdSense push error:", e);
     }
-  }, [adEnabled, adSlot]);
+  };
+
+  startAd();
+}, [adEnabled, adSlot]);
 
   // Loading state
   if (adEnabled === null) {
