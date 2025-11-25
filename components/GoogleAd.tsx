@@ -87,9 +87,9 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
         window.adsbygoogle = window.adsbygoogle || [];
         window.adsbygoogle.push({});
         adPushed.current = true;
-        console.log("Ad Loaded successfully");
-      } catch (err) {
-        console.error("AdSense push error:", err);
+          console.log('Ad initialized for slot:', adSlot);
+      } catch (error) {
+        console.error("AdSense push error:");
       }
     };
 
@@ -168,12 +168,12 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
 
   // Production ad
   return (
-    <div className={className} style={style}>
+    <div className={className}  style={style}>
       <ins
         ref={adRef}
         className="adsbygoogle"
-        style={{ display: "block", minHeight: 100 }}
-        data-ad-client="ca-pub-5504771682915102"
+        style={{ display: 'block', minHeight: 100 }}
+        data-ad-client="ca-pub-YOUR_PUBLISHER_ID" // change this to your actual AdSense publisher ID
         data-ad-slot={adSlot}
         data-ad-format={format}
         data-full-width-responsive="true"
