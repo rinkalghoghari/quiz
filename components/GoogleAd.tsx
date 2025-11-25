@@ -60,39 +60,41 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
     setAdEnabled(isAdEnabled);
   }, [propAdSlot]);
 
+  // Push AdSense AFTER width > 0
+  useEffect(() => {
+    if (!adEnabled || !adSlot) return;
+    if (!isProduction) return;
+    if (adPushed.current) return;
 
- useEffect(() => {
-  if (!adEnabled || !adSlot || adPushed.current) return;
+    let attempts = 0;
 
-  let tries = 0;
+    const loadAd = () => {
+      if (!adRef.current) return;
 
-  const loadAd = () => {
-    if (!adRef.current) return;
+      const width = adRef.current.offsetWidth;
 
-    const width = adRef.current.offsetWidth;
-
-    // Wait until width > 0
-    if (width === 0) {
-      if (tries < 50) {
-        tries++;
-        setTimeout(loadAd, 100);
-      } else {
-        console.warn("Ad failed because width never became > 0");
+      if (width === 0) {
+        if (attempts < 80) {
+          attempts++;
+          setTimeout(loadAd, 80);
+        } else {
+          console.warn("Ad failed due to width=0");
+        }
+        return;
       }
-      return;
-    }
 
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-      adPushed.current = true;
-      console.log("Ad Loaded after width check:", width);
-    } catch (err) {
-      console.error("AdSense push error:", err);
-    }
-  };
+      try {
+        window.adsbygoogle = window.adsbygoogle || [];
+        window.adsbygoogle.push({});
+        adPushed.current = true;
+        console.log("Ad Loaded successfully");
+      } catch (err) {
+        console.error("AdSense push error:", err);
+      }
+    };
 
-  loadAd();
-}, [adEnabled, adSlot]);
+    loadAd();
+  }, [adEnabled, adSlot, isProduction]);
 
 
 
@@ -166,11 +168,11 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
 
   // Production ad
   return (
-    <div className={`google-ad-container ${className}`} style={style}>
+    <div className={className} style={style}>
       <ins
         ref={adRef}
         className="adsbygoogle"
-        style={{ display: 'block' }}
+        style={{ display: "block", minHeight: 100 }}
         data-ad-client="ca-pub-5504771682915102"
         data-ad-slot={adSlot}
         data-ad-format={format}
