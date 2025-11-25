@@ -58,9 +58,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
     // Check if ads are enabled in Remote Config
     const isAdEnabled = gdprConsent === 'true' && getRemoteConfigValue('google_ad_enabled') !== 'false';
     setAdEnabled(isAdEnabled);
-  }, [propAdSlot]);
-
-  // Push AdSense AFTER width > 0
+  }, [propAdSlot])
   useEffect(() => {
     if (!adEnabled || !adSlot) return;
     if (!isProduction) return;
@@ -95,8 +93,6 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
 
     loadAd();
   }, [adEnabled, adSlot, isProduction]);
-
-
 
   // Loading state
   if (adEnabled === null) {
@@ -168,7 +164,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
 
   // Production ad
   return (
-    <div className={className}  style={style}>
+    <div className={className} style={style}>
       <ins
         ref={adRef}
         className="adsbygoogle"
