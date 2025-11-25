@@ -30,6 +30,14 @@ export default function RootLayout({
     <html lang="en">
       
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <Script
+        id="adsense-init"
+        async
+        strategy="afterInteractive"
+       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5504771682915102"
+        crossOrigin="anonymous"
+      />
+
         <LayoutWrapper>
           {children}
           <Analytics/>
