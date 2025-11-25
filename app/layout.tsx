@@ -17,23 +17,40 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Quize",
-  description: "Explore a wide range of quizzes across finance, technology, IT, and more. Test your knowledge, challenge your skills, and stay updated with the latest trends.",
+  description:
+    "Explore a wide range of quizzes across finance, technology, IT, and more. Test your knowledge, challenge your skills, and stay updated with the latest trends.",
 };
-
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <head>
+        <meta
+          name="google-adsense-account"
+          content="ca-pub-5504771682915102"
+        />
+      </head>
+
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <LayoutWrapper>
           {children}
-          <Analytics/>
+          <Analytics />
         </LayoutWrapper>
+
+        {/* MUST be afterInteractive — correct */}
+        <Script
+          id="adsense-script"
+          async
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5504771682915102"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   );
