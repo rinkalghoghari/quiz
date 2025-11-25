@@ -59,34 +59,24 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
     const isAdEnabled = gdprConsent === 'true' && getRemoteConfigValue('google_ad_enabled') !== 'false';
     setAdEnabled(isAdEnabled);
   }, [propAdSlot]);
-  
   useEffect(() => {
-  if (!adEnabled || !adSlot || adPushed.current) return;
-
-  let attempts = 0;
-
-  const startAd = () => {
-    if (!adRef.current) return;
-
-    const width = adRef.current.offsetWidth;
-
-    // Wait for width to become > 0
-    if (width === 0 && attempts < 50) {
-      attempts++;
-      return setTimeout(startAd, 100);
-    }
+    if (!adEnabled || !adSlot || adPushed.current) return;
 
     try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-      adPushed.current = true;
-      console.log("Ad initialized after width check:", width);
-    } catch (e) {
-      console.error("AdSense push error:", e);
-    }
-  };
+      // Small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        if (window.adsbygoogle && adRef.current) {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+          adPushed.current = true;
+          console.log('Ad initialized for slot:', adSlot);
+        }
+      }, 100);
 
-  startAd();
-}, [adEnabled, adSlot]);
+      return () => clearTimeout(timer);
+    } catch (error) {
+      console.error('AdSense initialization error:', error);
+    }
+  }, [adEnabled, adSlot]);
 
   // Loading state
   if (adEnabled === null) {
@@ -158,7 +148,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
 
   // Production ad
   return (
-    <div className={`google-ad-container ${className}`} style={{  display: "block", width: "100%", minHeight: "100px", minWidth: "320px", ...style }}>
+    <div className={`google-ad-container ${className}`} style={style}>
       <ins
         ref={adRef}
         className="adsbygoogle"
