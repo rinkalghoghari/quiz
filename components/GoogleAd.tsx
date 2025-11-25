@@ -148,7 +148,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({
 
   // Production ad
   return (
-    <div className={`google-ad-container ${className}`} style={style}>
+    <div className={`google-ad-container ${className}`} style={{ width: "100%", minWidth: "320px", ...style }}>
       <ins
         ref={adRef}
         className="adsbygoogle"
